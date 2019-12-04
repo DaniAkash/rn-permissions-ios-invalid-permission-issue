@@ -6,7 +6,7 @@
  * @flow
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,6 +15,9 @@ import {
   Text,
   StatusBar,
 } from 'react-native';
+
+import { PERMISSIONS } from 'react-native-permissions';
+import requestPermission from './requestPermission';
 
 import {
   Header,
@@ -25,6 +28,20 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 const App: () => React$Node = () => {
+
+  useEffect(() => {
+    requestPermission({
+      permissionType:
+        Platform.OS === "ios"
+          ? PERMISSIONS.IOS.LOCATION_WHEN_IN_USE
+          : PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+      requestError: () => alert("Permission Error"),
+      featureUnavailable: () => alert("Permission Unavailable"),
+      permissionBlocked: () => alert("Permission Denied"),
+      permissionGranted: () => alert("Permission Granted")
+    });
+  });
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
